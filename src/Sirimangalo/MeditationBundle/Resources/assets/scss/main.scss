@@ -1,3 +1,7 @@
+$bundlePath: "/bundles/sirimangalomeditation/";
+$imagesPath: "#{$bundlePath}images";
+$fa-font-path: "#{$bundlePath}fonts/";
+
 @import "bootstrap_complete";
 @import "font_awesome_complete";
 @import "bootstrap_customizations";

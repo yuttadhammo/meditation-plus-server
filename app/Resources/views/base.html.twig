@@ -28,9 +28,43 @@
 
                 <div class="collapse navbar-collapse" id="navbar">
                     <ul class="navbar-nav nav">
-                        {{ _self.nav_link('Login', 'fos_user_security_login') }}
+                        <li>
+                            <a href="#">Commitments</a>
+                        </li>
+                        <li>
+                            <a href="#">Etc</a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav nav navbar-right">
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-user fa-fw"></i>
+
+                                    {{ app.user.username }}
+
+                                    <b class="caret"></b>
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#">Profile</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('fos_user_security_logout') }}">
+                                            Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            {{ _self.nav_link('Login', 'fos_user_security_login') }}
+                        {% endif %}
                     </ul>
                 </div>
+
+
             </div>
         </nav>
 
@@ -40,6 +74,20 @@
             {% endblock %}
         </div>
 
+        {% javascripts output='js/compiled/*.min.v1.js'
+            '@SirimangaloMeditationBundle/Resources/assets/javascripts/jquery.js'
+            '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/modal.js'
+            '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/dropdown.js'
+            '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/tooltip.js'
+            '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/popover.js'
+            '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/collapse.js'
+            '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/transition.js'
+            '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/scrollspy.js'
+            '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/affix.js'
+            '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/tab.js'
+            '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/carousel.js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
         {% block javascripts %}{% endblock %}
     </body>
 </html>
