@@ -1,0 +1,11 @@
+# Time ago in words - Twig Extension
+less than %seconds seconds ago: < 1m ago
+half a minute ago: < 1m ago
+less than a minute ago: < 1m ago
+1 minute ago: 1m ago
+%minutes minutes ago: %minutesm ago
+about 1 hour ago: 1h ago
+about %hours hours ago: %hoursh ago
+1 day ago: 1d ago
+%days days ago: %daysd ago
+"{1} 1 month ago |]1,Inf[ %monthsm ago":

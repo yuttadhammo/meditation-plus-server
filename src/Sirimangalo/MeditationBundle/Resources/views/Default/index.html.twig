@@ -23,14 +23,17 @@
         <div class="messages">
 
         </div>
-        <form action="" method="post" id="chatForm">
 
-            <input type="text" class="form-control" name="text" placeholder="Your message">
+        {% if app.user %}
+            <form action="" method="post" id="chatForm">
 
-            <button type="submit" class="btn btn-default">Send</button>
-
-
-        </form>
+                <input type="text" id="messageField" class="form-control" name="message[text]" placeholder="Your message">
+                <input type="hidden" name="message[token]" value="{{ postMessageToken }}">
+                <button type="submit" class="btn btn-default">Send</button>
+            </form>
+        {% else %}
+            <form><p>Please log in to send a message.</p></form>
+        {% endif %}
     </div>
 
     <p></p>
@@ -51,6 +54,8 @@
 {% block javascripts %}
 <script>
     var $messages = $('.messages');
+    var $chatForm = $('#chatForm');
+    var $messageField = $('#messageField');
 
     var updateChat = function() {
         $messages.load('{{ path('render_chats') }}');
@@ -58,5 +63,19 @@
 
     window.setTimeout(updateChat, 5000);
     updateChat();
+
+    $chatForm.on('submit', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: '{{ path('post_message') }}',
+            data: $chatForm.serialize(),
+            success: function(data) {
+                updateChat();
+                $messageField.val('');
+            }
+        });
+    });
 </script>
 {% endblock %}

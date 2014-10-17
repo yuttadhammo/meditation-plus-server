@@ -32,6 +32,11 @@ $fa-font-path: "#{$bundlePath}fonts/";
 
 }
 
+span.chat-time {
+    display: inline-block;
+    width: 110px;
+}
+
 .chat-user {
     font-weight: bold;
 }
