@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="chats")
  * @ORM\Entity
  */
-class Chats
+class Chat
 {
     /**
      * @var integer
@@ -50,7 +50,7 @@ class Chats
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -73,7 +73,7 @@ class Chats
     /**
      * Get time
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getTime()
     {
@@ -96,7 +96,7 @@ class Chats
     /**
      * Get message
      *
-     * @return string 
+     * @return string
      */
     public function getMessage()
     {
@@ -119,7 +119,7 @@ class Chats
     /**
      * Get user
      *
-     * @return \Sirimangalo\MeditationBundle\Entity\User 
+     * @return \Sirimangalo\MeditationBundle\Entity\User
      */
     public function getUser()
     {

@@ -16,4 +16,19 @@ class DefaultController extends Controller
     {
         return array();
     }
+
+    /**
+     * @Route("/renderChats.html", name="render_chats")
+     * @Template()
+     */
+    public function renderChatsAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $chats = $em->getRepository('SirimangaloMeditationBundle:Chat')->findAll();
+
+        return array(
+            'chats' => $chats
+        );
+    }
+
 }

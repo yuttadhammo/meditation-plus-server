@@ -6,3 +6,32 @@ $fa-font-path: "#{$bundlePath}fonts/";
 @import "font_awesome_complete";
 @import "bootstrap_customizations";
 
+/* SHOUTBOX */
+
+.shoutbox {
+
+    overflow-y: scroll;
+    background: #FFFFEE;
+    border: 1px solid #aaa;
+
+    .messages {
+        height: 300px;
+        padding: 5px;
+    }
+
+    form {
+        padding: 5px;
+        background: #eee;
+        border-top: 1px solid #aaa;
+
+        .form-control {
+            width: 500px;
+            display: inline-block;
+        }
+    }
+
+}
+
+.chat-user {
+    font-weight: bold;
+}
