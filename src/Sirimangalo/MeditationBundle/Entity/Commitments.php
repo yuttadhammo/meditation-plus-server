@@ -71,4 +71,175 @@ class Commitments
     private $length;
 
 
+
+    /**
+     * Get cid
+     *
+     * @return integer 
+     */
+    public function getCid()
+    {
+        return $this->cid;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     * @return Commitments
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string 
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Commitments
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set creatorid
+     *
+     * @param integer $creatorid
+     * @return Commitments
+     */
+    public function setCreatorid($creatorid)
+    {
+        $this->creatorid = $creatorid;
+
+        return $this;
+    }
+
+    /**
+     * Get creatorid
+     *
+     * @return integer 
+     */
+    public function getCreatorid()
+    {
+        return $this->creatorid;
+    }
+
+    /**
+     * Set period
+     *
+     * @param string $period
+     * @return Commitments
+     */
+    public function setPeriod($period)
+    {
+        $this->period = $period;
+
+        return $this;
+    }
+
+    /**
+     * Get period
+     *
+     * @return string 
+     */
+    public function getPeriod()
+    {
+        return $this->period;
+    }
+
+    /**
+     * Set day
+     *
+     * @param integer $day
+     * @return Commitments
+     */
+    public function setDay($day)
+    {
+        $this->day = $day;
+
+        return $this;
+    }
+
+    /**
+     * Get day
+     *
+     * @return integer 
+     */
+    public function getDay()
+    {
+        return $this->day;
+    }
+
+    /**
+     * Set time
+     *
+     * @param string $time
+     * @return Commitments
+     */
+    public function setTime($time)
+    {
+        $this->time = $time;
+
+        return $this;
+    }
+
+    /**
+     * Get time
+     *
+     * @return string 
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * Set length
+     *
+     * @param string $length
+     * @return Commitments
+     */
+    public function setLength($length)
+    {
+        $this->length = $length;
+
+        return $this;
+    }
+
+    /**
+     * Get length
+     *
+     * @return string 
+     */
+    public function getLength()
+    {
+        return $this->length;
+    }
 }

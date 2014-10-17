@@ -39,4 +39,60 @@ class UserCommitments
     private $cid;
 
 
+
+    /**
+     * Get aid
+     *
+     * @return integer 
+     */
+    public function getAid()
+    {
+        return $this->aid;
+    }
+
+    /**
+     * Set uid
+     *
+     * @param integer $uid
+     * @return UserCommitments
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+
+        return $this;
+    }
+
+    /**
+     * Get uid
+     *
+     * @return integer 
+     */
+    public function getUid()
+    {
+        return $this->uid;
+    }
+
+    /**
+     * Set cid
+     *
+     * @param \Sirimangalo\MeditationBundle\Entity\Commitments $cid
+     * @return UserCommitments
+     */
+    public function setCid(\Sirimangalo\MeditationBundle\Entity\Commitments $cid = null)
+    {
+        $this->cid = $cid;
+
+        return $this;
+    }
+
+    /**
+     * Get cid
+     *
+     * @return \Sirimangalo\MeditationBundle\Entity\Commitments 
+     */
+    public function getCid()
+    {
+        return $this->cid;
+    }
 }

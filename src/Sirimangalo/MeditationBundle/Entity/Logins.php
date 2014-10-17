@@ -29,4 +29,37 @@ class Logins
     private $token;
 
 
+
+    /**
+     * Get uid
+     *
+     * @return integer 
+     */
+    public function getUid()
+    {
+        return $this->uid;
+    }
+
+    /**
+     * Set token
+     *
+     * @param string $token
+     * @return Logins
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    /**
+     * Get token
+     *
+     * @return string 
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
 }
