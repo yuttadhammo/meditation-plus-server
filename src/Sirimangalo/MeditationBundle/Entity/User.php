@@ -170,24 +170,237 @@ class User extends BaseUser
      */
     protected $img;
 
+     public function addRole($role)
+    {
+        $role = strtoupper($role);
+        if ($role === static::ROLE_DEFAULT) {
+            return $this;
+        }
 
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
 
     /**
-     * Get id
+     * Serializes the user.
      *
-     * @return integer 
+     * The serialized data have to contain the fields used by the equals method and the username.
+     *
+     * @return string
+     */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->password,
+            $this->salt,
+            $this->usernameCanonical,
+            $this->username,
+            $this->expired,
+            $this->locked,
+            $this->credentialsExpired,
+            $this->enabled,
+            $this->id,
+        ));
+    }
+
+    /**
+     * Unserializes the user.
+     *
+     * @param string $serialized
+     */
+    public function unserialize($serialized)
+    {
+        $data = unserialize($serialized);
+        // add a few extra elements in the array to ensure that we have enough keys when unserializing
+        // older data which does not include all properties.
+        $data = array_merge($data, array_fill(0, 2, null));
+
+        list(
+            $this->password,
+            $this->salt,
+            $this->usernameCanonical,
+            $this->username,
+            $this->expired,
+            $this->locked,
+            $this->credentialsExpired,
+            $this->enabled,
+            $this->id
+        ) = $data;
+    }
+
+    /**
+     * Removes sensitive data from the user.
+     */
+    public function eraseCredentials()
+    {
+        $this->plainPassword = null;
+    }
+
+    /**
+     * Returns the user unique id.
+     *
+     * @return mixed
      */
     public function getId()
     {
         return $this->id;
     }
 
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function getUsernameCanonical()
+    {
+        return $this->usernameCanonical;
+    }
+
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function getEmailCanonical()
+    {
+        return $this->emailCanonical;
+    }
+
     /**
-     * Set username
+     * Gets the encrypted password.
      *
-     * @param string $username
-     * @return User
+     * @return string
      */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * Gets the last login time.
+     *
+     * @return \DateTime
+     */
+    public function getLastLogin()
+    {
+        return $this->lastLogin;
+    }
+
+    public function getConfirmationToken()
+    {
+        return $this->confirmationToken;
+    }
+
+    /**
+     * Returns the user roles
+     *
+     * @return array The roles
+     */
+    public function getRoles()
+    {
+        $roles = $this->roles;
+
+        foreach ($this->getGroups() as $group) {
+            $roles = array_merge($roles, $group->getRoles());
+        }
+
+        // we need to make sure to have at least one role
+        $roles[] = static::ROLE_DEFAULT;
+
+        return array_unique($roles);
+    }
+
+    /**
+     * Never use this to check if this user has access to anything!
+     *
+     * Use the SecurityContext, or an implementation of AccessDecisionManager
+     * instead, e.g.
+     *
+     *         $securityContext->isGranted('ROLE_USER');
+     *
+     * @param string $role
+     *
+     * @return boolean
+     */
+    public function hasRole($role)
+    {
+        return in_array(strtoupper($role), $this->getRoles(), true);
+    }
+
+    public function isAccountNonExpired()
+    {
+        if (true === $this->expired) {
+            return false;
+        }
+
+        if (null !== $this->expiresAt && $this->expiresAt->getTimestamp() < time()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return !$this->locked;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        if (true === $this->credentialsExpired) {
+            return false;
+        }
+
+        if (null !== $this->credentialsExpireAt && $this->credentialsExpireAt->getTimestamp() < time()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isCredentialsExpired()
+    {
+        return !$this->isCredentialsNonExpired();
+    }
+
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    public function isExpired()
+    {
+        return !$this->isAccountNonExpired();
+    }
+
+    public function isLocked()
+    {
+        return !$this->isAccountNonLocked();
+    }
+
+    public function removeRole($role)
+    {
+        if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
+            unset($this->roles[$key]);
+            $this->roles = array_values($this->roles);
+        }
+
+        return $this;
+    }
+
     public function setUsername($username)
     {
         $this->username = $username;
@@ -195,22 +408,6 @@ class User extends BaseUser
         return $this;
     }
 
-    /**
-     * Get username
-     *
-     * @return string 
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
-     * Set usernameCanonical
-     *
-     * @param string $usernameCanonical
-     * @return User
-     */
     public function setUsernameCanonical($usernameCanonical)
     {
         $this->usernameCanonical = $usernameCanonical;
@@ -219,21 +416,29 @@ class User extends BaseUser
     }
 
     /**
-     * Get usernameCanonical
+     * @param \DateTime $date
      *
-     * @return string 
+     * @return User
      */
-    public function getUsernameCanonical()
+    public function setCredentialsExpireAt(\DateTime $date)
     {
-        return $this->usernameCanonical;
+        $this->credentialsExpireAt = $date;
+
+        return $this;
     }
 
     /**
-     * Set email
+     * @param boolean $boolean
      *
-     * @param string $email
      * @return User
      */
+    public function setCredentialsExpired($boolean)
+    {
+        $this->credentialsExpired = $boolean;
+
+        return $this;
+    }
+
     public function setEmail($email)
     {
         $this->email = $email;
@@ -241,22 +446,6 @@ class User extends BaseUser
         return $this;
     }
 
-    /**
-     * Get email
-     *
-     * @return string 
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * Set emailCanonical
-     *
-     * @param string $emailCanonical
-     * @return User
-     */
     public function setEmailCanonical($emailCanonical)
     {
         $this->emailCanonical = $emailCanonical;
@@ -264,14 +453,123 @@ class User extends BaseUser
         return $this;
     }
 
-    /**
-     * Get emailCanonical
-     *
-     * @return string 
-     */
-    public function getEmailCanonical()
+    public function setEnabled($boolean)
     {
-        return $this->emailCanonical;
+        $this->enabled = (Boolean) $boolean;
+
+        return $this;
+    }
+
+    /**
+     * Sets this user to expired.
+     *
+     * @param Boolean $boolean
+     *
+     * @return User
+     */
+    public function setExpired($boolean)
+    {
+        $this->expired = (Boolean) $boolean;
+
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $date
+     *
+     * @return User
+     */
+    public function setExpiresAt(\DateTime $date)
+    {
+        $this->expiresAt = $date;
+
+        return $this;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function setSuperAdmin($boolean)
+    {
+        if (true === $boolean) {
+            $this->addRole(static::ROLE_SUPER_ADMIN);
+        } else {
+            $this->removeRole(static::ROLE_SUPER_ADMIN);
+        }
+
+        return $this;
+    }
+
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
+
+        return $this;
+    }
+
+    public function setLastLogin(\DateTime $time)
+    {
+        $this->lastLogin = $time;
+
+        return $this;
+    }
+
+    public function setLocked($boolean)
+    {
+        $this->locked = $boolean;
+
+        return $this;
+    }
+
+    public function setConfirmationToken($confirmationToken)
+    {
+        $this->confirmationToken = $confirmationToken;
+
+        return $this;
+    }
+
+    public function setPasswordRequestedAt(\DateTime $date = null)
+    {
+        $this->passwordRequestedAt = $date;
+
+        return $this;
+    }
+
+    /**
+     * Gets the timestamp that the user requested a password reset.
+     *
+     * @return null|\DateTime
+     */
+    public function getPasswordRequestedAt()
+    {
+        return $this->passwordRequestedAt;
+    }
+
+    public function isPasswordRequestNonExpired($ttl)
+    {
+        return $this->getPasswordRequestedAt() instanceof \DateTime &&
+               $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
+    }
+
+    public function setRoles(array $roles)
+    {
+        $this->roles = array();
+
+        foreach ($roles as $role) {
+            $this->addRole($role);
+        }
+
+        return $this;
+    }
+
+
+    public function __toString()
+    {
+        return (string) $this->getUsername();
     }
 
     /**
@@ -288,75 +586,6 @@ class User extends BaseUser
     }
 
     /**
-     * Get salt
-     *
-     * @return string 
-     */
-    public function getSalt()
-    {
-        return $this->salt;
-    }
-
-    /**
-     * Set password
-     *
-     * @param string $password
-     * @return User
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Get password
-     *
-     * @return string 
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
-     * Set lastLogin
-     *
-     * @param \DateTime $lastLogin
-     * @return User
-     */
-    public function setLastLogin($lastLogin)
-    {
-        $this->lastLogin = $lastLogin;
-
-        return $this;
-    }
-
-    /**
-     * Get lastLogin
-     *
-     * @return \DateTime 
-     */
-    public function getLastLogin()
-    {
-        return $this->lastLogin;
-    }
-
-    /**
-     * Set expiresAt
-     *
-     * @param \DateTime $expiresAt
-     * @return User
-     */
-    public function setExpiresAt($expiresAt)
-    {
-        $this->expiresAt = $expiresAt;
-
-        return $this;
-    }
-
-    /**
      * Get expiresAt
      *
      * @return \DateTime 
@@ -364,65 +593,6 @@ class User extends BaseUser
     public function getExpiresAt()
     {
         return $this->expiresAt;
-    }
-
-    /**
-     * Set passwordRequestedAt
-     *
-     * @param \DateTime $passwordRequestedAt
-     * @return User
-     */
-    public function setPasswordRequestedAt($passwordRequestedAt)
-    {
-        $this->passwordRequestedAt = $passwordRequestedAt;
-
-        return $this;
-    }
-
-    /**
-     * Get passwordRequestedAt
-     *
-     * @return \DateTime 
-     */
-    public function getPasswordRequestedAt()
-    {
-        return $this->passwordRequestedAt;
-    }
-
-    /**
-     * Set confirmationToken
-     *
-     * @param string $confirmationToken
-     * @return User
-     */
-    public function setConfirmationToken($confirmationToken)
-    {
-        $this->confirmationToken = $confirmationToken;
-
-        return $this;
-    }
-
-    /**
-     * Get confirmationToken
-     *
-     * @return string 
-     */
-    public function getConfirmationToken()
-    {
-        return $this->confirmationToken;
-    }
-
-    /**
-     * Set expired
-     *
-     * @param boolean $expired
-     * @return User
-     */
-    public function setExpired($expired)
-    {
-        $this->expired = $expired;
-
-        return $this;
     }
 
     /**
@@ -436,19 +606,6 @@ class User extends BaseUser
     }
 
     /**
-     * Set locked
-     *
-     * @param boolean $locked
-     * @return User
-     */
-    public function setLocked($locked)
-    {
-        $this->locked = $locked;
-
-        return $this;
-    }
-
-    /**
      * Get locked
      *
      * @return boolean 
@@ -459,19 +616,6 @@ class User extends BaseUser
     }
 
     /**
-     * Set enabled
-     *
-     * @param boolean $enabled
-     * @return User
-     */
-    public function setEnabled($enabled)
-    {
-        $this->enabled = $enabled;
-
-        return $this;
-    }
-
-    /**
      * Get enabled
      *
      * @return boolean 
@@ -479,19 +623,6 @@ class User extends BaseUser
     public function getEnabled()
     {
         return $this->enabled;
-    }
-
-    /**
-     * Set credentialsExpired
-     *
-     * @param boolean $credentialsExpired
-     * @return User
-     */
-    public function setCredentialsExpired($credentialsExpired)
-    {
-        $this->credentialsExpired = $credentialsExpired;
-
-        return $this;
     }
 
     /**
@@ -548,29 +679,6 @@ class User extends BaseUser
     public function getShowEmail()
     {
         return $this->showEmail;
-    }
-
-    /**
-     * Set roles
-     *
-     * @param array $roles
-     * @return User
-     */
-    public function setRoles($roles)
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
-
-    /**
-     * Get roles
-     *
-     * @return array 
-     */
-    public function getRoles()
-    {
-        return $this->roles;
     }
 
     /**
