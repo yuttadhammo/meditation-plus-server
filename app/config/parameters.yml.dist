@@ -2,7 +2,7 @@ parameters:
     database_driver:   pdo_mysql
     database_host:     127.0.0.1
     database_port:     ~
-    database_name:     symfony
+    database_name:     meditation
     database_user:     root
     database_password: ~
     # You should uncomment this if you want use pdo_sqlite
@@ -15,3 +15,6 @@ parameters:
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    ruby_path: /usr/bin/ruby
+    compass_path: /usr/bin/compass
