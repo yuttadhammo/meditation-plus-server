@@ -58,10 +58,13 @@
     var $messageField = $('#messageField');
 
     var updateChat = function() {
-        $messages.load('{{ path('render_chats') }}');
+        $messages.load('{{ path('render_chats') }}', null, function() {
+            var objDiv = document.getElementById("your_div");
+            $messages.scrollTop($messages[0].scrollHeight);
+        });
+        window.setTimeout(updateChat, 5000);
     };
 
-    window.setTimeout(updateChat, 5000);
     updateChat();
 
     $chatForm.on('submit', function(e) {

@@ -10,13 +10,13 @@ $fa-font-path: "#{$bundlePath}fonts/";
 
 .shoutbox {
 
-    overflow-y: scroll;
     background: #FFFFEE;
     border: 1px solid #aaa;
 
     .messages {
         height: 300px;
         padding: 5px;
+        overflow-y: scroll;
     }
 
     form {
@@ -34,7 +34,7 @@ $fa-font-path: "#{$bundlePath}fonts/";
 
 span.chat-time {
     display: inline-block;
-    width: 110px;
+    width: 140px;
 }
 
 .chat-user {
