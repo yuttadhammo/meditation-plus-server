@@ -17,4 +17,4 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
 
     ruby_path: /usr/bin/ruby
-    compass_path: /usr/bin/compass
+    compass_path: /usr/local/bin/compass
