@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    ant build script for Symfony 2 projects
+-->
+
+<project name="symfony-build" default="build">
+
+    <target name="build" depends="prepare,parameters,vendors,assets,lint,phpunit,prepare-upload"/>
+
+    <!-- Aufräumen von Ordnern aus dem letzten Build -->
+    <target name="clean" description="Cleanup build artifacts">
+        <delete dir="${basedir}/app/cache" />
+        <delete file="${basedir}/app/config/parameters.yml" />
+        <delete file="${basedir}/composer.phar" />
+    </target>
+
+    <target name="prepare" depends="clean" description="Prepare for build">
+        <mkdir dir="${basedir}/app/cache" />
+    </target>
+
+    <!--
+        Syntaxcheck von PHP- und TWIG-Dateien, die sich seit dem letzten
+        Build geändert haben.
+    -->
+    <target name="lint" description="Perform syntax check of sourcecode files">
+        <apply executable="php" failonerror="true">
+            <arg value="-l" />
+
+            <fileset dir="${basedir}/src">
+                <include name="**/*.php" />
+                <modified />
+            </fileset>
+
+            <fileset dir="${basedir}/src/">
+                <include name="**/*Test.php" />
+                <modified />
+            </fileset>
+        </apply>
+
+        <apply executable="php" failonerror="true">
+            <arg value="app/console" />
+
+            <arg value="twig:lint" />
+            <arg value="--env=test" />
+
+            <fileset dir="${basedir}/app/Resources">
+                <include name="**/*.twig" />
+                <modified />
+            </fileset>
+
+            <fileset dir="${basedir}/src">
+                <include name="**/*.twig" />
+                <modified />
+            </fileset>
+        </apply>
+    </target>
+
+    <target name="phpunit" description="Run unit tests with PHPUnit">
+        <exec executable="phpunit" failonerror="true">
+            <arg value="-c" />
+            <arg path="${basedir}/app/phpunit.xml" />
+        </exec>
+    </target>
+
+    <!-- Vendors mittels Composer installieren. Composer-Autoloader optimieren. -->
+    <target name="vendors" description="Update vendors">
+        <exec executable="bash">
+          <arg value="-c" />
+          <arg value="curl -s http://getcomposer.org/installer | php" />
+        </exec>
+        <exec executable="php">
+          <arg value="composer.phar" />
+          <arg value="install" />
+          <arg value="--no-interaction" />
+          <arg value="--prefer-dist" />
+        </exec>
+        <exec executable="php">
+          <arg value="composer.phar" />
+          <arg value="dump-autoload" />
+          <arg value="--optimize" />
+        </exec>
+    </target>
+
+    <!-- Assets erzeugen -->
+    <target name="assets" description="Compiling assets">
+        <exec executable="php" failonerror="true">
+            <arg value="app/console" />
+            <arg value="assetic:dump" />
+            <arg value="-n" />
+            <arg value="--env=prod" />
+            <arg value="--no-debug" />
+        </exec>
+    </target>
+
+    <!-- Parameter-Datei für die Unittests bereitstellen -->
+    <target name="parameters" description="Copy parameters">
+        <exec executable="cp" failonerror="true">
+            <arg path="app/config/parameters.yml.dist" />
+            <arg path="app/config/parameters.yml" />
+        </exec>
+
+        <exec executable="cp" failonerror="true">
+            <arg path="app/phpunit.xml.dist" />
+            <arg path="app/phpunit.xml" />
+        </exec>
+    </target>
+
+    <target name="prepare-upload" description="Prepare Upload">
+        <delete dir="${basedir}/app/cache" />
+        <delete dir="${basedir}/app/build" />
+        <delete file="${basedir}/app/config/parameters.yml" />
+        <delete file="${basedir}/composer.phar" />
+
+        <tar destfile="${basedir}/app/build/tar/transfer.tar.bz2"
+             basedir="${basedir}/"
+             longfile="gnu"
+             compression="bzip2"
+         />
+    </target>
+</project>
