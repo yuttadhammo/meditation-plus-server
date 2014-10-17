@@ -1,1 +1,35 @@
-Hello {{ name }}!
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <h1>Welcome to our online meditation page!</h1>
+
+    <p>
+        The meditation we practice is based on the teachings found in this booklet.<br>
+        Please let us know you are here by submitting your intended time spent walking and sitting.<br>
+        We normally do walking first, then sitting.<br>
+    </p>
+
+    <div class="well">
+        <strong>Meditation Times</strong>
+    </div>
+
+    <div class="well">
+        <strong>Total minutes of meditation</strong>
+    </div>
+
+    <div class="well">
+        <strong>Chat</strong>
+    </div>
+
+    <div class="well">
+        <strong>Meditator List</strong>
+    </div>
+
+    <div class="well">
+        <strong>Somit meditation information</strong>
+    </div>
+
+    <div class="well">
+        <strong>Share page</strong>
+    </div>
+{% endblock %}

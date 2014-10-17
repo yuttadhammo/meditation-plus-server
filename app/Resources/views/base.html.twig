@@ -1,13 +1,59 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8" />
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Meditation+{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+        {% block stylesheets %}
+            {% stylesheets filter="compass" output="css/compiled/*.v3.css"
+                "@SirimangaloMeditationBundle/Resources/assets/scss/main.scss"
+            %}
+                <link rel="stylesheet" href="{{ asset_url }}" />
+            {% endstylesheets %}
+        {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a href="#" class="navbar-brand">  Meditation+
+                    </a>
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                </div>
+
+                <div class="collapse navbar-collapse" id="navbar">
+                    <ul class="navbar-nav nav">
+                        {{ _self.nav_link('Login', 'fos_user_security_login') }}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            {% block body %}
+
+            {% endblock %}
+        </div>
+
         {% block javascripts %}{% endblock %}
     </body>
 </html>
+
+{# some macros #}
+
+{% macro nav_link(text, url) %}
+    <li
+        {% if url in app.request.attributes.get('_route') %}
+            class="active"
+        {% endif %}
+    >
+        <a href="{{ url(url) }}">
+            {{ text }}
+        </a>
+    </li>
+{% endmacro %}
