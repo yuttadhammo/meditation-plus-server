@@ -1,0 +1,107 @@
+{% extends 'form_div_layout.html.twig' %}
+
+{% block form_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+    <span class="help-block">
+
+            {% for error in errors %}
+                {{
+                    error.messagePluralization is null
+                        ? error.messageTemplate|trans(error.messageParameters, 'validators')
+                        : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'validators')
+                }}
+            {% endfor %}
+
+    </span>
+    {% endif %}
+{% endspaceless %}
+{% endblock form_errors %}
+
+{% block form_widget_simple %}
+{% spaceless %}
+    {% set type = type|default('text') %}
+    {% if type != 'file' %}
+        {% set attr = attr|merge({'class' : attr.class|default('') ~ ' form-control'}) %}
+    {% endif %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+{% endspaceless %}
+{% endblock form_widget_simple %}
+
+{% block form_row %}
+{% spaceless %}
+    <div class="form-group {% if errors|length > 0 %}has-error{% endif %}">
+        {{ form_label(form) }}
+
+        <div class="col-sm-8">
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock form_row %}
+
+{% block textarea_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({'class' : attr.class|default('') ~ ' form-control'}) %}
+    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+{% endspaceless %}
+{% endblock textarea_widget %}
+
+{% block choice_widget_collapsed %}
+{% spaceless %}
+    {% if required and empty_value is none and not empty_value_in_choices and not multiple %}
+        {% set required = false %}
+    {% endif %}
+    {% set attr = attr|merge({'class' : attr.class|default('') ~ ' form-control'}) %}
+    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+        {% if empty_value is not none %}
+            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
+        {% endif %}
+        {% if preferred_choices|length > 0 %}
+            {% set options = preferred_choices %}
+            {{ block('choice_widget_options') }}
+            {% if choices|length > 0 and separator is not none %}
+                <option disabled="disabled">{{ separator }}</option>
+            {% endif %}
+        {% endif %}
+        {% set options = choices %}
+        {{ block('choice_widget_options') }}
+    </select>
+{% endspaceless %}
+{% endblock choice_widget_collapsed %}
+
+{% block form_label %}
+{% spaceless %}
+    {% if not compound %}
+        {% set label_attr = label_attr|merge({'for': id}) %}
+    {% endif %}
+    {% if required %}
+        {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+    {% endif %}
+    {% if label is empty %}
+        {% set label = id|replace({'_':'.'})|trans %}
+    {% endif %}
+
+    {% set label_attr = label_attr|merge({'class' : label_attr.class|default('') ~ ' control-label col-sm-4'}) %}
+
+
+    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+        {{ label|trans }}
+    </label>
+
+{% endspaceless %}
+{% endblock form_label %}
+
+
+{% block date_widget %}
+{% spaceless %}
+
+   {% set type = type|default('text') %}
+   {% set attr = attr|merge({'class' : attr.class|default('') ~ ' form-control'}) %}
+
+        <input data-date="12-02-2012" type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+
+
+{% endspaceless %}
+{% endblock date_widget %}
