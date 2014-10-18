@@ -1,22 +1,40 @@
 {% extends "FOSUserBundle::layout.html.twig" %}
 
 {% block fos_user_content %}
+
+<div class="page-header">
+    <h1>Login</h1>
+</div>
+
 {% if error %}
-    <div>{{ error|trans({}, 'FOSUserBundle') }}</div>
+    <div class="alert alert-danger">{{ error|trans({}, 'FOSUserBundle') }}</div>
 {% endif %}
 
-<form action="{{ path("fos_user_security_check") }}" method="post">
+<form action="{{ path("fos_user_security_check") }}" class="form-horizontal" method="post">
     <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
 
-    <label for="username">{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}</label>
-    <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" />
 
-    <label for="password">{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}</label>
-    <input type="password" id="password" name="_password" required="required" />
+        <div class="form-group">
+        <div class="col-md-2"><label for="username">Username</label></div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" required="required" />
+        </div>
+        </div>
+
+
+
+
+        <div class="form-group">
+        <div class="col-md-2"><label for="password">Password</label></div>
+        <div class="col-md-4"><input class="form-control" type="password" id="password" name="_password" required="required" /></div>
+        </div>
+
+
+
 
     <p>
         <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
-        <label for="remember_me">{{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}</label>
+        <label for="remember_me">Remember me</label>
     </p>
 
     <p>
