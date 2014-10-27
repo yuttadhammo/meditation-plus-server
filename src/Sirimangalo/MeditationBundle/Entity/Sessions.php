@@ -15,18 +15,22 @@ class Sessions
     /**
      * @var integer
      *
-     * @ORM\Column(name="sid", type="bigint", nullable=false)
+     * @ORM\Column(name="sid", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $sid;
+    protected $id;
 
     /**
-     * @var integer
+     * @var \Users
      *
-     * @ORM\Column(name="uid", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="uid")
+     * })
      */
-    private $uid;
+    protected $user;
+
 
     /**
      * @var \DateTime
@@ -52,44 +56,9 @@ class Sessions
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="end", type="datetime", nullable=false)
+     * @ORM\Column(name="end", type="datetime", nullable=true)
      */
-    private $end;
-
-
-
-    /**
-     * Get sid
-     *
-     * @return integer 
-     */
-    public function getSid()
-    {
-        return $this->sid;
-    }
-
-    /**
-     * Set uid
-     *
-     * @param integer $uid
-     * @return Sessions
-     */
-    public function setUid($uid)
-    {
-        $this->uid = $uid;
-
-        return $this;
-    }
-
-    /**
-     * Get uid
-     *
-     * @return integer 
-     */
-    public function getUid()
-    {
-        return $this->uid;
-    }
+    private $end = true;
 
     /**
      * Set start
@@ -107,7 +76,7 @@ class Sessions
     /**
      * Get start
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStart()
     {
@@ -130,7 +99,7 @@ class Sessions
     /**
      * Get walking
      *
-     * @return integer 
+     * @return integer
      */
     public function getWalking()
     {
@@ -153,7 +122,7 @@ class Sessions
     /**
      * Get sitting
      *
-     * @return integer 
+     * @return integer
      */
     public function getSitting()
     {
@@ -176,10 +145,43 @@ class Sessions
     /**
      * Get end
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getEnd()
     {
         return $this->end;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \Sirimangalo\MeditationBundle\Entity\User $user
+     * @return Sessions
+     */
+    public function setUser(\Sirimangalo\MeditationBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Sirimangalo\MeditationBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }
