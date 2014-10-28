@@ -1,7 +1,9 @@
 {% for item in chats %}
-    <div class="chat-row">
+    <div class="chat-row {% if date()|date('U') - item.time|date('U') > 3600 %}old-chat{% endif %}">
         <span class="chat-time">{{ item.time|time_ago_in_words }}</span>
-        <span class="chat-user">{{ item.user.username }}:</span>
-        <span class="chat-message">{{ item.message }}</span>
+
+        <span class="chat-message">
+            <span class="chat-user">{{ item.user.username }}:</span> {{ item.message }}
+        </span>
     </div>
 {% endfor %}
