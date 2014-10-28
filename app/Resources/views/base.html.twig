@@ -7,7 +7,7 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 
         {% block stylesheets %}
-            {% stylesheets filter="compass" output="css/compiled/*.v3.css"
+            {% stylesheets filter="compass" output="css/compiled/*.v4.css"
                 "@SirimangaloMeditationBundle/Resources/assets/scss/main.scss"
             %}
                 <link rel="stylesheet" href="{{ asset_url }}" />
@@ -74,7 +74,7 @@
             {% endblock %}
         </div>
 
-        {% javascripts output='js/compiled/*.min.v1.js'
+        {% javascripts output='js/compiled/*.min.v2.js'
             '@SirimangaloMeditationBundle/Resources/assets/javascripts/jquery.js'
             '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/modal.js'
             '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/dropdown.js'
