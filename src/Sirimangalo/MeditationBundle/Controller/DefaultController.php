@@ -125,8 +125,8 @@ class DefaultController extends Controller
             ) &&
             $request->isXmlHttpRequest()
         ) {
-            if ((isset($formData['walking']) && $formData['walking'] !== '') or
-                (isset($formData['sitting']) && $formData['sitting'] !== '')) {
+            if ((isset($formData['walking']) && (int) $formData['walking'] > 0) or
+                (isset($formData['sitting']) && (int) $formData['sitting'] > 0)) {
 
                 $session = new Session();
                 $session->setStart(new \DateTime());
