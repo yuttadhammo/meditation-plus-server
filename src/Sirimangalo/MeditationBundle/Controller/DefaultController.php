@@ -44,6 +44,20 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/renderSessions.html", name="render_sessions")
+     * @Template()
+     */
+    public function renderSessionsAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $sessions = $em->getRepository('SirimangaloMeditationBundle:Session')->findRecent();
+
+        return array(
+            'sessions' => $sessions
+        );
+    }
+
+    /**
      * @Secure(roles="ROLE_USER")
      * @Route("/postMessage", name="post_message")
      * @Method("POST")

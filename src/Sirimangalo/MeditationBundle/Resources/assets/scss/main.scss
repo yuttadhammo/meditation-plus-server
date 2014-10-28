@@ -5,6 +5,7 @@ $fa-font-path: "#{$bundlePath}fonts/";
 @import "bootstrap_complete";
 @import "font_awesome_complete";
 @import "bootstrap_customizations";
+@import "sweet_alert";
 
 /* SHOUTBOX */
 
@@ -39,4 +40,14 @@ span.chat-time {
 
 .chat-user {
     font-weight: bold;
+}
+
+/* SESSIONS */
+
+.session-panel {
+    .form-control {
+        width: 100px;
+        display: inline-block;
+        margin-right: 10px;
+    }
 }

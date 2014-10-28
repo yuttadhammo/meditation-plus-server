@@ -27,7 +27,7 @@
         {% if app.user %}
             <form action="" method="post" id="chatForm">
 
-                <input type="text" id="messageField" class="form-control" name="message[text]" placeholder="Your message">
+                <input type="text" required id="messageField" class="form-control" name="message[text]" placeholder="Your message">
                 <input type="hidden" name="message[token]" value="{{ postMessageToken }}">
                 <button type="submit" class="btn btn-default">Send</button>
             </form>
@@ -38,24 +38,29 @@
 
     <p></p>
 
-    <div class="well">
-        <strong>Meditator List</strong>
+    <h2>Meditator List</h2>
+
+    <div class="sessions">
+
     </div>
 
-    <div class="well">
-        <h2>Submit meditation information</h2>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Submit meditation information</h3>
+        </div>
+        <div class="panel-body session-panel">
+            {% if app.user %}
+                <form action="" method="post" id="sessionForm">
 
-        {% if app.user %}
-            <form action="" method="post" id="sessionForm">
-
-                <input type="text" class="form-control" name="session[sitting]">
-                <input type="text" class="form-control" name="session[walking]">
-                <input type="hidden" name="session[token]" value="{{ postSessionToken }}">
-                <button type="submit" class="btn btn-default">Send</button>
-            </form>
-        {% else %}
-            <form><p>Please log in to submit meditation information.</p></form>
-        {% endif %}
+                    <input type="text" class="form-control" name="session[sitting]" placeholder="Sit (min)">
+                    <input type="text" class="form-control" name="session[walking]" placeholder="Walk (min)">
+                    <input type="hidden" name="session[token]" value="{{ postSessionToken }}">
+                    <button type="submit" class="btn btn-default">Send</button>
+                </form>
+            {% else %}
+                <form><p>Please log in to submit meditation information.</p></form>
+            {% endif %}
+        </div>
     </div>
 
     <div class="well">
@@ -65,52 +70,13 @@
 
 {% block javascripts %}
 <script>
-    // caching elements
-    var $messages     = $('.messages');
-    var $chatForm     = $('#chatForm');
-    var $sessionForm  = $('#sessionForm');
-    var $messageField = $('#messageField');
-
-    var updateChat = function() {
-        $messages.load('{{ path('render_chats') }}', null, function() {
-            var objDiv = document.getElementById("your_div");
-
-            // TODO: only scroll to bottom if previous scroll state was at bottom
-            $messages.scrollTop($messages[0].scrollHeight);
-        });
-        window.setTimeout(updateChat, 5000);
-    };
-
-    updateChat();
-
-    // submit handler for shoutbox
-    $chatForm.on('submit', function(e) {
-        e.preventDefault();
-
-        $.ajax({
-            type: "POST",
-            url: '{{ path('post_message') }}',
-            data: $chatForm.serialize(),
-            success: function(data) {
-                updateChat();
-                $messageField.val('');
-            }
-        });
-    });
-
-    // submit handler for meditation submission
-    $sessionForm.on('submit', function(e) {
-        e.preventDefault();
-
-        $.ajax({
-            type: "POST",
-            url: '{{ path('post_session') }}',
-            data: $sessionForm.serialize(),
-            success: function(data) {
-                updateChat();
-                $sessionForm.find('input[type=text]').val('');
-            }
-        });
-    });
+    var renderChatPath     = '{{ path('render_chats') }}';
+    var renderSessionsPath = '{{ path('render_sessions') }}';
+    var postMessagePath    = '{{ path('post_message') }}';
+    var postSessionPath    = '{{ path('post_session') }}';
 </script>
+{% javascripts output='js/compiled/*.min.v1.js'
+    '@SirimangaloMeditationBundle/Resources/views/Default/index.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
 {% endblock %}

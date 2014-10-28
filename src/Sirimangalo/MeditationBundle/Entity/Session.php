@@ -8,9 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
  * Sessions
  *
  * @ORM\Table(name="sessions")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Sirimangalo\MeditationBundle\Entity\SessionRepository")
  */
-class Sessions
+class Session
 {
     /**
      * @var integer
@@ -58,7 +58,7 @@ class Sessions
      *
      * @ORM\Column(name="end", type="datetime", nullable=true)
      */
-    private $end = true;
+    private $end = null;
 
     /**
      * Set start

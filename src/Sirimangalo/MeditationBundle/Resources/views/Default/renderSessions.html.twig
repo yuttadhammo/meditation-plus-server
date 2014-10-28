@@ -1,0 +1,76 @@
+{% if sessions|length > 0 %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Started</th>
+                <th>Walking</th>
+                <th>Sitting</th>
+                <th>Currently</th>
+                <th>Name</th>
+                <th>Country</th>
+            </tr>
+        <tbody>
+            {% for item in sessions %}
+                <tr>
+                    <td>{{ item.start|time_ago_in_words }}</td>
+                    <td>
+                        {% if item.walking > 0 %}
+                            {% set remainingWalking = item.walking - ((date()|date('U') - item.start|date('U')) / 60)|round  %}
+
+                            {% if remainingWalking < 0 %}
+                                {% set remainingWalking = 0 %}
+                            {% endif %}
+
+                            {{ remainingWalking }}/{{ item.walking }}
+                        {% else %}
+                            {% set remainingWalking = 0 %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.sitting > 0 %}
+
+                            {% if remainingWalking == 0 %}
+                                {% set remainingSitting = item.walking + item.sitting - ((date()|date('U') - item.start|date('U')) / 60)|round  %}
+                            {% else %}
+                                {% set remainingSitting = item.sitting %}
+                            {% endif %}
+
+                            {% if remainingSitting < 0 %}
+                                {% set remainingSitting = 0 %}
+                            {% endif %}
+
+                            {{ remainingSitting }}/{{ item.sitting }}
+                        {% else %}
+                            {% set remainingSitting = 0 %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if remainingWalking > 0 %}
+                            {% image '@SirimangaloMeditationBundle/Resources/public/images/walking_icon.png' %}
+                                <img src="{{ asset_url }}" alt="Walking" />
+                            {% endimage %}
+                        {% elseif remainingSitting > 0 %}
+                            {% image '@SirimangaloMeditationBundle/Resources/public/images/sitting_icon.png' %}
+                                <img src="{{ asset_url }}" alt="Sitting" />
+                            {% endimage %}
+                        {% else %}
+                            {% image '@SirimangaloMeditationBundle/Resources/public/images/finished_icon.png' %}
+                                <img src="{{ asset_url }}" alt="Done" />
+                            {% endimage %}
+                        {% endif %}
+                    </td>
+                    <td>{{ item.user.username }}</td>
+                    <td></td>
+
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="well">
+        Nobody is currently meditating.
+    </div>
+{% endif %}
+
