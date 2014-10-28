@@ -71,7 +71,7 @@ class DefaultController extends Controller
             $this->get('form.csrf_provider')->isCsrfTokenValid('postMessage', $formData['token']) &&
             $request->isXmlHttpRequest()) {
 
-            if (isset($formData['text']) && $formData['text'] !== '') {
+            if (isset($formData['text']) && trim($formData['text']) !== '') {
                 $chat = new Chat();
                 $chat->setTime(new \DateTime());
                 $chat->setUser($this->getUser());
