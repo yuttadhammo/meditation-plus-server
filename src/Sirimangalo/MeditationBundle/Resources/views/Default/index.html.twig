@@ -9,13 +9,14 @@
         We normally do walking first, then sitting.<br>
     </p>
 
-    <div class="well">
-        <strong>Meditation Times</strong>
-    </div>
+    <h2>Meditation Times</h2>
+
+    <h4>Total minutes of meditation per hour (UTC) of day (past month):</h4>
 
     <div class="well">
-        <strong>Total minutes of meditation</strong>
+        <canvas id="meditationHours" width="1024" height="400"></canvas>
     </div>
+
 
     <h2>Meditator Shoutbox</h2>
 
@@ -74,6 +75,7 @@
     var renderSessionsPath = '{{ path('render_sessions') }}';
     var postMessagePath    = '{{ path('post_message') }}';
     var postSessionPath    = '{{ path('post_session') }}';
+    var meditationHours = {{ meditationHours|json_encode() }};
 </script>
 {% javascripts output='js/compiled/*.min.v1.js'
     '@SirimangaloMeditationBundle/Resources/views/Default/index.js' %}

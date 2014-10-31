@@ -7,7 +7,7 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 
         {% block stylesheets %}
-            {% stylesheets filter="compass" output="css/compiled/*.v5.css"
+            {% stylesheets filter="compass" output="css/compiled/*.v6.css"
                 "@SirimangaloMeditationBundle/Resources/assets/scss/main.scss"
             %}
                 <link rel="stylesheet" href="{{ asset_url }}" />
@@ -74,7 +74,7 @@
             {% endblock %}
         </div>
 
-        {% javascripts output='js/compiled/*.min.v2.js'
+        {% javascripts output='js/compiled/*.min.v3.js'
             '@SirimangaloMeditationBundle/Resources/assets/javascripts/jquery.js'
             '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/modal.js'
             '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/dropdown.js'
@@ -86,7 +86,8 @@
             '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/affix.js'
             '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/tab.js'
             '@SirimangaloMeditationBundle/Resources/assets/javascripts/bootstrap/carousel.js'
-            '@SirimangaloMeditationBundle/Resources/assets/javascripts/sweet-alert.js' %}
+            '@SirimangaloMeditationBundle/Resources/assets/javascripts/sweet-alert.js'
+            '@SirimangaloMeditationBundle/Resources/assets/javascripts/chart.js' %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
         {% block javascripts %}{% endblock %}

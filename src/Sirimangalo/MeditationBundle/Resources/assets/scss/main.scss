@@ -7,6 +7,12 @@ $fa-font-path: "#{$bundlePath}fonts/";
 @import "bootstrap_customizations";
 @import "sweet_alert";
 
+/* GLOBAL */
+
+.centered {
+    text-align: center;
+}
+
 /* SHOUTBOX */
 
 .shoutbox {
@@ -63,4 +69,12 @@ $fa-font-path: "#{$bundlePath}fonts/";
         display: inline-block;
         margin-right: 10px;
     }
+}
+
+/* CHART */
+
+#meditationHours {
+    width: 100% !important;
+    /*max-width: 800px;*/
+    height: auto !important;
 }

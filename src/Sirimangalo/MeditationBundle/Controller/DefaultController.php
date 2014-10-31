@@ -23,10 +23,43 @@ class DefaultController extends Controller
         $postMessageToken = $this->get('form.csrf_provider')->generateCsrfToken('postMessage');
         $postSessionToken = $this->get('form.csrf_provider')->generateCsrfToken('postSession');
 
+        $hours = $this->getHoursList();
+
         return array(
             'postMessageToken' => $postMessageToken,
-            'postSessionToken' => $postSessionToken
+            'postSessionToken' => $postSessionToken,
+            'meditationHours'  => $hours
         );
+    }
+
+    protected function getHoursList()
+    {
+        $hours = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('SirimangaloMeditationBundle:Session');
+        $monthAgo = $repo->findMonthAgo();
+
+        foreach ($monthAgo as $session) {
+            $hStart = $session->getStart()->format('G');
+            $hEnd = $session->getEnd()->format('G');
+
+            if ($hStart == $hEnd) {
+                $time = $session->getWalking() + $session->getSitting();
+                $hours[$hStart] += $time;
+            } else {
+                $ho = $hStart + 1;
+                $time = 60 - $session->getStart()->format('i');
+                $hours[$hStart] += $time;
+                while ($ho < $hEnd) {
+                    $hours[$ho++] += 60;
+                }
+                $time = $session->getEnd()->format('i');
+                $hours[$hEnd] += $time;
+            }
+        }
+
+        return $hours;
     }
 
     /**

@@ -35,4 +35,19 @@ class SessionRepository extends EntityRepository
            ->setParameter('userId', $userId)
            ->getResult();
     }
+
+    public function findMonthAgo()
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT s
+                FROM SirimangaloMeditationBundle:Session s
+                WHERE
+                    s.end > :monthAgo
+                ORDER BY s.start DESC'
+            )
+            ->setParameter('monthAgo', date('Y-m-d', strtotime('-1 month')))
+            ->getResult();
+    }
+
 }

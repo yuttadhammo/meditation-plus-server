@@ -1,9 +1,10 @@
 // caching elements
-var $messages     = $('.messages');
-var $sessions     = $('.sessions');
-var $chatForm     = $('#chatForm');
-var $sessionForm  = $('#sessionForm');
-var $messageField = $('#messageField');
+var $messages        = $('.messages');
+var $sessions        = $('.sessions');
+var $chatForm        = $('#chatForm');
+var $sessionForm     = $('#sessionForm');
+var $messageField    = $('#messageField');
+var $meditationHours = $('#meditationHours');
 
 var updateChat = function() {
     var atBottom = $messages.scrollTop() + $messages.innerHeight() >= $messages[0].scrollHeight;
@@ -67,4 +68,30 @@ $sessionForm.on('submit', function(e) {
 
 var showError = function() {
     sweetAlert("Oops...", "Something went wrong! Try again later.", "error");
+};
+
+// Charting
+
+var ctx = $meditationHours.get(0).getContext("2d");
+var chartData = {
+    labels: [
+        "00", "01", "02", "03", "04", "05", "06",
+        "07", "08", "09", "10", "11", "12", "13",
+        "14", "15", "16", "17", "18", "19", "20",
+        "21", "22", "23"
+    ],
+    datasets: [{
+            data: meditationHours
+        }
+    ]
+};
+var width = $meditationHours.parent().width();
+$meditationHours.attr("width", width);
+new Chart(ctx).Bar(chartData);
+
+// Redraw on resize
+window.onresize = function(event) {
+    var width = $meditationHours.parent().width();
+    $meditationHours.attr("width", width);
+    new Chart(ctx).Bar(chartData);
 };
