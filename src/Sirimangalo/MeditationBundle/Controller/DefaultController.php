@@ -50,7 +50,29 @@ class DefaultController extends Controller
     public function renderSessionsAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $sessions = $em->getRepository('SirimangaloMeditationBundle:Session')->findRecent();
+        $repo = $em->getRepository('SirimangaloMeditationBundle:Session');
+        $sessions = $repo->findRecent();
+
+        // end older sessions
+        $oldSessions = $repo->findMineRunning($this->getUser()->getId());
+
+        foreach ($oldSessions as $session) {
+            $medMinutes = $session->getSitting() + $session->getWalking();
+
+            // add total meditation minutes to start to get end
+            $end = strtotime(
+                '+' . $medMinutes . ' minutes',
+                $session->getStart()->getTimestamp()
+            );
+
+            // already done?
+            if ($end <= time()) {
+                $session->setEnd(new \DateTime(date('c', $end)));
+                $em->persist($session);
+            }
+        }
+
+        $em->flush();
 
         return array(
             'sessions' => $sessions
@@ -128,27 +150,41 @@ class DefaultController extends Controller
             if ((isset($formData['walking']) && (int) $formData['walking'] > 0) or
                 (isset($formData['sitting']) && (int) $formData['sitting'] > 0)) {
 
-                $session = new Session();
-                $session->setStart(new \DateTime());
-                $session->setUser($this->getUser());
-
-                if (isset($formData['walking'])) {
-                    $session->setWalking($formData['walking']);
-                }
-
-                if (isset($formData['sitting'])) {
-                    $session->setSitting($formData['sitting']);
-                }
-
                 $em = $this->getDoctrine()->getManager();
-                $em->persist($session);
-                $em->flush();
 
-                $response = new Response(
-                    json_encode(array(
-                        'status' => 'ok'
-                    ))
-                );
+                $oldSessions = $em->getRepository('SirimangaloMeditationBundle:Session')
+                    ->findMineRunning($this->getUser()->getId());
+
+                if (count($oldSessions) === 0) {
+
+                    $session = new Session();
+                    $session->setStart(new \DateTime());
+                    $session->setUser($this->getUser());
+
+                    if (isset($formData['walking'])) {
+                        $session->setWalking($formData['walking']);
+                    }
+
+                    if (isset($formData['sitting'])) {
+                        $session->setSitting($formData['sitting']);
+                    }
+
+                    $em->persist($session);
+                    $em->flush();
+
+                    $response = new Response(
+                        json_encode(array(
+                            'status' => 'ok'
+                        ))
+                    );
+                } else {
+                    $response = new Response(
+                        json_encode(array(
+                            'status' => 'error',
+                            'error' => 'still_meditating'
+                        ))
+                    );
+                }
             } else {
                 $response = new Response(
                     json_encode(array(

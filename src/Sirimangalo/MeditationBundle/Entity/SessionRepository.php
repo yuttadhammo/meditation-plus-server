@@ -21,4 +21,18 @@ class SessionRepository extends EntityRepository
             ->setParameter('hourAgo', date('Y-m-d', strtotime('-1 hour')))
             ->getResult();
     }
+
+    public function findMineRunning($userId)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT s
+                 FROM SirimangaloMeditationBundle:Session s
+                 WHERE
+                     s.end IS NULL AND
+                     s.user = :userId'
+            )
+           ->setParameter('userId', $userId)
+           ->getResult();
+    }
 }

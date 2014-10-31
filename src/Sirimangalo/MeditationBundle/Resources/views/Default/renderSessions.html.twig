@@ -21,7 +21,10 @@
                                 {% set remainingWalking = 0 %}
                             {% endif %}
 
-                            {{ remainingWalking }}/{{ item.walking }}
+                            {% if remainingWalking > 0 -%}
+                                {{ remainingWalking }}/
+                            {%- endif -%}
+                            {{ item.walking }}
                         {% else %}
                             {% set remainingWalking = 0 %}
                             -
@@ -40,7 +43,10 @@
                                 {% set remainingSitting = 0 %}
                             {% endif %}
 
-                            {{ remainingSitting }}/{{ item.sitting }}
+                            {% if remainingSitting > 0 -%}
+                                {{ remainingSitting }}/
+                            {%- endif -%}
+                            {{ item.sitting }}
                         {% else %}
                             {% set remainingSitting = 0 %}
                             -
