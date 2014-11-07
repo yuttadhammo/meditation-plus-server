@@ -19,14 +19,17 @@ class UserCommitments
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $aid;
+    private $id;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="uid", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="uid", referencedColumnName="uid")
+     * })
      */
-    private $uid;
+    private $user;
 
     /**
      * @var \Commitments
@@ -36,63 +39,6 @@ class UserCommitments
      *   @ORM\JoinColumn(name="cid", referencedColumnName="cid")
      * })
      */
-    private $cid;
+    private $commitment;
 
-
-
-    /**
-     * Get aid
-     *
-     * @return integer 
-     */
-    public function getAid()
-    {
-        return $this->aid;
-    }
-
-    /**
-     * Set uid
-     *
-     * @param integer $uid
-     * @return UserCommitments
-     */
-    public function setUid($uid)
-    {
-        $this->uid = $uid;
-
-        return $this;
-    }
-
-    /**
-     * Get uid
-     *
-     * @return integer 
-     */
-    public function getUid()
-    {
-        return $this->uid;
-    }
-
-    /**
-     * Set cid
-     *
-     * @param \Sirimangalo\MeditationBundle\Entity\Commitments $cid
-     * @return UserCommitments
-     */
-    public function setCid(\Sirimangalo\MeditationBundle\Entity\Commitments $cid = null)
-    {
-        $this->cid = $cid;
-
-        return $this;
-    }
-
-    /**
-     * Get cid
-     *
-     * @return \Sirimangalo\MeditationBundle\Entity\Commitments 
-     */
-    public function getCid()
-    {
-        return $this->cid;
-    }
 }

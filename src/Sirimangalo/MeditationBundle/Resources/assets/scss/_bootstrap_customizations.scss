@@ -83,6 +83,17 @@ label.required:after{
     }
 }
 
+.bs-callout-success {
+    background-color: lighten(#5cb85c, 40%);
+    border-color: #4cae4c;
+
+    h4 {
+        color: #5cb85c;
+    }
+}
+
+
+
 // Sidebar
 
 .bs-docs-sidebar.affix{

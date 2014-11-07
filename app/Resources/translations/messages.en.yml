@@ -9,3 +9,14 @@ about %hours hours ago: %hoursh ago
 1 day ago: 1d ago
 %days days ago: %daysd ago
 "{1} 1 month ago |]1,Inf[ %monthsm ago":
+
+sirimangalo:
+    meditationbundle:
+        commitment:
+            title: Title
+            description: Description
+            period: Period
+            day: Day
+            time: Time
+            length: Length
+            user: User

@@ -27,14 +27,16 @@
                 </div>
 
                 <div class="collapse navbar-collapse" id="navbar">
-                    <ul class="navbar-nav nav">
-                        <li>
-                            <a href="#">Commitments</a>
-                        </li>
-                        <li>
-                            <a href="#">Etc</a>
-                        </li>
-                    </ul>
+                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                        <ul class="navbar-nav nav">
+                            <li>
+                                <a href="{{ path('index') }}">Home</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('commitment') }}">Commitments</a>
+                            </li>
+                        </ul>
+                    {% endif %}
 
                     <ul class="navbar-nav nav navbar-right">
                         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}

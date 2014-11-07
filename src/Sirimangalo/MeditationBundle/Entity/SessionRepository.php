@@ -22,6 +22,75 @@ class SessionRepository extends EntityRepository
             ->getResult();
     }
 
+    public function findRecentDaysByUser($user)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT s
+                FROM SirimangaloMeditationBundle:Session s
+                WHERE
+                    (
+                        s.end > :daysAgo OR (
+                            s.end IS NULL AND s.start > :daysAgo
+                        )
+                    ) AND
+                    s.user = :user
+                ORDER BY s.start DESC'
+            )
+            ->setParameter(
+                'daysAgo',
+                date('Y-m-d', strtotime('-10 days'))
+            )
+            ->setParameter('user', $user->getId())
+            ->getResult();
+    }
+
+    public function findRecentWeeksByUser($user)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT s
+                FROM SirimangaloMeditationBundle:Session s
+                WHERE
+                    (
+                        s.end > :weeksAgo OR (
+                            s.end IS NULL AND s.start > :weeksAgo
+                        )
+                    ) AND
+                    s.user = :user
+                ORDER BY s.start DESC'
+            )
+            ->setParameter(
+                'weeksAgo',
+                date('Y-m-d', strtotime('-10 weeks'))
+            )
+            ->setParameter('user', $user->getId())
+            ->getResult();
+    }
+
+    public function findRecentMonthsByUser($user)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT s
+                FROM SirimangaloMeditationBundle:Session s
+                WHERE
+                    (
+                        s.end > :monthsAgo OR (
+                            s.end IS NULL AND s.start > :monthsAgo
+                        )
+                    ) AND
+                    s.user = :user
+                ORDER BY s.start DESC'
+            )
+            ->setParameter(
+                'monthsAgo',
+                date('Y-m-d', strtotime('-10 months'))
+            )
+            ->setParameter('user', $user->getId())
+            ->getResult();
+    }
+
     public function findMineRunning($userId)
     {
         return $this->getEntityManager()
@@ -49,5 +118,4 @@ class SessionRepository extends EntityRepository
             ->setParameter('monthAgo', date('Y-m-d', strtotime('-1 month')))
             ->getResult();
     }
-
 }
