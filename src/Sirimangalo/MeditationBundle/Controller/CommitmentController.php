@@ -68,7 +68,7 @@ class CommitmentController extends Controller
         );
 
         if (count($usrCommitment) > 0) {
-            // TODO: already committed msg
+            $this->get('session')->getFlashBag()->set('error', 'You are already committed.');
             return $this->redirect($this->generateUrl('commitment'));
         }
 
@@ -80,7 +80,7 @@ class CommitmentController extends Controller
         $em->persist($usrCommitment);
         $em->flush();
 
-        // TODO: msg you've committed
+        $this->get('session')->getFlashBag()->set('notice', 'Successfully committed.');
         return $this->redirect($this->generateUrl('commitment'));
     }
 
@@ -109,7 +109,7 @@ class CommitmentController extends Controller
         );
 
         if (count($usrCommitment) === 0) {
-            // TODO: not committed msg
+            $this->get('session')->getFlashBag()->set('error', 'You are not committed.');
             return $this->redirect($this->generateUrl('commitment'));
         }
 
@@ -118,7 +118,7 @@ class CommitmentController extends Controller
         $em->remove($usrCommitment);
         $em->flush();
 
-        // TODO: msg you've committed
+        $this->get('session')->getFlashBag()->set('notice', 'Successfully uncommitted.');
         return $this->redirect($this->generateUrl('commitment'));
     }
 
