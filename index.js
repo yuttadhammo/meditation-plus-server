@@ -76,7 +76,7 @@ function refreshTime() {
 
 
 
-		window.setTimeout(refreshTime(), 1000);
+		window.setTimeout(refreshTime, 1000);
 
 		if(++seq % 10 === 0 && !G_static) {
 			if(++seq % 60 === 0){
