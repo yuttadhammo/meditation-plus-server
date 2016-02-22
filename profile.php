@@ -9,7 +9,7 @@ $can_edit = false;
 
 $profilePage = true;
 
-if(isset($_GET['user'])) {
+if(isset($_GET['user']) && preg_match('/[^-1-9a-zA-Z ]/',$_GET['user']) != 1) {
 	$profile = $_GET['user'];
 
 	if(isset($_SESSION['username'])) {
