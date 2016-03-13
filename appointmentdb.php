@@ -13,7 +13,7 @@ if(isset($_POST['form_id']) && loggedIn()) {
 		$time = mysqli_real_escape_string($con,$_POST['time']);
 		
 		// DST 
-		$time = "".((int)$time-100);
+		//$time = "".((int)$time-100);
 		$time = (strlen($time) == 3 ? "0":"").$time;
 
 		$username = mysqli_real_escape_string($con,$_POST['username']);
@@ -46,7 +46,8 @@ while($row = mysqli_fetch_assoc($query)) {
 $adata = [];
 foreach ($appointments as $i => $c) {
 
-	$c['time'] = ((int) $c['time'] + 100).'';
+	//DST
+	//$c['time'] = ((int) $c['time'] + 100).'';
 	 
 
 	$adata[$c['time']][$c['day']] = $c;

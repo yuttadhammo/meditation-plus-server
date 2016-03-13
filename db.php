@@ -110,7 +110,7 @@ function getSchedule() {
 	$schedule = [];
 	while($row = mysqli_fetch_assoc($query)) {
 		// DST
-	        $row['time'] = ''.((int)$row['time']+100);
+	        //$row['time'] = ''.((int)$row['time']+100);
         	$row['time'] = (strlen($row['time']) < 4?'0':'').$row['time'];
 		$schedule[] = $row;
 	}
