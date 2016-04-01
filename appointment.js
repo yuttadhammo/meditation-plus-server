@@ -126,10 +126,11 @@ function submitData(serializedData) {
 			var mins = d.getUTCHours()*60 + d.getUTCMinutes();
 			
 			var myTimeM = mmins - d.getTimezoneOffset();
-			var myMins = myTimeM % 60;
-			var myTime = Math.floor(myTimeM/60) + ':' + (myMins < 10 ? '0' : '') +myMins;
+			var myHours = Math.floor(myTimeM/60);
+                        var myMins = myTimeM % 60;
+			var myTime = (myHours < 10 ? '0' : '') + myHours + ':' + (myMins < 10 ? '0' : '') +myMins;
 			
-			output += '<tr><td class="th pointer" title="'+myTime+' your time.">'+atime+'h UTC</td>';
+			output += '<tr><td class="th pointer" title="'+myTime+' your time."><b>'+atime+'h UTC</b><br/>(<em>'+myTime+'</em>)</td>';
 			for(var i = 0; i < 7; i++) {
 				if(obj[atime][i]) {
 					
