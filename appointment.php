@@ -17,6 +17,7 @@ require('bar.php');
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script src="tz.js"></script>
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
+	<script src="https://apis.google.com/js/hangout.js" async defer></script>
 	<script>
 <?php
 
@@ -27,10 +28,11 @@ require('bar.php');
 		var isAdmin = '.(in_array($_SESSION['username'],$admin)?'true':'false').';
 		var logged_user = \''.$_SESSION['username'].'\';';
 	}
-	else
+	else {
 		echo '
 		var isAdmin = false;
 		var logged_user = \'\';';
+	}
 ?>
 
 	</script>
